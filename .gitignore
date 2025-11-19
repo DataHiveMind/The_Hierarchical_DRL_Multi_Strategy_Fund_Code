@@ -1,0 +1,450 @@
+# ============================================================================
+# Hierarchical DRL Multi-Strategy Fund - .gitignore
+# ============================================================================
+
+# ============================================================================
+# Python
+# ============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ============================================================================
+# Data Files
+# ============================================================================
+# Raw data
+data/raw/**/*.csv
+data/raw/**/*.parquet
+data/raw/**/*.h5
+data/raw/**/*.hdf5
+data/raw/**/*.feather
+data/raw/**/*.pkl
+data/raw/**/*.pickle
+
+# Processed data
+data/processed/**/*.csv
+data/processed/**/*.parquet
+data/processed/**/*.h5
+data/processed/**/*.hdf5
+data/processed/**/*.feather
+data/processed/**/*.pkl
+data/processed/**/*.pickle
+
+# Keep directory structure but ignore data files
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/raw/equities/.gitkeep
+!data/raw/futures/.gitkeep
+!data/raw/fx/.gitkeep
+!data/processed/equities/.gitkeep
+!data/processed/futures/.gitkeep
+!data/processed/fx/.gitkeep
+
+# ============================================================================
+# ArcticDB / Database Files
+# ============================================================================
+# ArcticDB LMDB files
+*.lmdb
+*.mdb
+*_data/
+equities_data/
+fx_data/
+futures_data/
+financial_data/
+
+# MongoDB data
+*.bson
+
+# SQLite databases
+*.db
+*.sqlite
+
+# ============================================================================
+# Model Files
+# ============================================================================
+# Trained models
+models/**/*.h5
+models/**/*.pt
+models/**/*.pth
+models/**/*.pkl
+models/**/*.pickle
+models/**/*.ckpt
+models/**/*.pb
+models/**/*.onnx
+models/**/*.tflite
+models/**/*.keras
+
+# Model checkpoints
+models/**/*checkpoint*
+models/**/*.weights
+
+# Keep directory structure
+!models/master/.gitkeep
+!models/specialists/.gitkeep
+
+# ============================================================================
+# Reports and Visualizations
+# ============================================================================
+# Generated figures and plots
+reports/figures/**/*.png
+reports/figures/**/*.jpg
+reports/figures/**/*.jpeg
+reports/figures/**/*.pdf
+reports/figures/**/*.svg
+
+# Generated tables
+reports/tables/**/*.csv
+reports/tables/**/*.xlsx
+reports/tables/**/*.tex
+
+# Generated plots
+reports/plots/**/*.png
+reports/plots/**/*.jpg
+reports/plots/**/*.pdf
+
+# Keep directory structure
+!reports/figures/.gitkeep
+!reports/plots/.gitkeep
+!reports/tables/.gitkeep
+
+# ============================================================================
+# Logs and Temporary Files
+# ============================================================================
+# Log files
+*.log
+logs/
+*.out
+*.err
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# IDE and Editor Files
+# ============================================================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ============================================================================
+# Operating System Files
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================================
+# Secrets and Credentials
+# ============================================================================
+# API keys and credentials
+*.key
+*.pem
+*.cert
+*.p12
+secrets/
+credentials/
+.secrets
+.credentials
+config/secrets.yml
+config/credentials.yml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.envrc
+
+# AWS credentials
+.aws/
+
+# Google Cloud credentials
+*.json
+!environment.yml
+!package.json
+!tsconfig.json
+
+# ============================================================================
+# Backup Files
+# ============================================================================
+*.bak
+*.backup
+*.old
+*_backup
+*_old
+
+# ============================================================================
+# Profiling and Performance
+# ============================================================================
+*.prof
+*.lprof
+*.pyprof
+.benchmarks/
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+# Backtesting results
+backtests/
+backtest_results/
+
+# Trading signals (if generated)
+signals/
+*.signal
+
+# Research notebooks outputs (keep notebooks, ignore large outputs)
+notebooks/**/*.html
+notebooks/**/*_files/
+
+# Experiment tracking
+mlruns/
+runs/
+experiments/
+wandb/
+.neptune/
+
+# TensorBoard logs
+tensorboard/
+tb_logs/
+
+# Cache directories
+.cache/
+cache/
+__cache__/
+
+# ============================================================================
+# Documentation Build
+# ============================================================================
+docs/_build/
+docs/_static/
+docs/_templates/
+_build/
+.doctrees/
+
+# ============================================================================
+# Package managers
+# ============================================================================
+# Conda
+*.conda
+*.tar.bz2
+
+# Poetry
+poetry.lock
+
+# ============================================================================
+# Compiled files
+# ============================================================================
+*.exe
+*.dll
+*.dylib
+
+# ============================================================================
+# Archives
+# ============================================================================
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# ============================================================================
+# Keep Important Files
+# ============================================================================
+# Always include these
+!README.md
+!LICENSE
+!environment.yml
+!.gitkeep
+!requirements.txt
+!setup.py
+!pyproject.toml
+
+# ============================================================================
+# Custom Exceptions
+# ============================================================================
+# If you want to track sample data or small test files, add them here
+# !data/raw/sample_data.csv
+# !models/pretrained/base_model.pt

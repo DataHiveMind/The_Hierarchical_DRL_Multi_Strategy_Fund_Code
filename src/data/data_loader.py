@@ -1,4 +1,4 @@
-""" 
+"""
 Data loading utilities for the multi-strategy fund codebase.
 
 This module provides functions and classes to load and preprocess financial data.
@@ -9,12 +9,21 @@ Dependencises:
     - numpy
     - yfinance
 """
+
+import arcticdb as adb
 import pandas as pd
-import numpy as np
 import yfinance as yf
 
+
 class DataLoader:
-    def __init__(self, tickers, start_date, end_date, interval='1d'):
+    def __init__(
+        self,
+        tickers,
+        start_date,
+        end_date,
+        interval="1d",
+        db_url="lmdb://financial_data",
+    ):
         """
         Initializes the DataLoader with specified parameters.
 
@@ -23,39 +32,41 @@ class DataLoader:
             start_date (str): Start date for data in 'YYYY-MM-DD' format.
             end_date (str): End date for data in 'YYYY-MM-DD' format.
             interval (str): Data interval (e.g., '1d', '1h', '5m').
+            db_url (str): ArcticDB connection URI (default: 'lmdb://financial_data' for local LMDB storage).
         """
         self.tickers = tickers
         self.start_date = start_date
         self.end_date = end_date
         self.interval = interval
+        self.arctic_database = adb.Arctic(db_url)
 
-    def load_data(self):
+    def load_raw_data(self):
         """
         Downloads and preprocesses data for the specified tickers.
 
         Returns:
             pd.DataFrame: A DataFrame containing the combined data for all tickers.
         """
-        all_data = []
-        for ticker in self.tickers:
-            data = yf.download(ticker, start=self.start_date, end=self.end_date, interval=self.interval)
-            if data is not None and not data.empty:
-                data['Ticker'] = ticker
-                all_data.append(data)
+        data = yf.download(
+            tickers=self.tickers,
+            start=self.start_date,
+            end=self.end_date,
+            interval=self.interval,
+            auto_adjust=False,
+        )
 
-        combined_data = pd.concat(all_data)
-        combined_data.reset_index(inplace=True)
+        data.reset_index(inplace=True)
 
         # Handle missing values by forward filling
-        combined_data.ffill( inplace=True)
-        combined_data.bfill( inplace=True)
+        data.ffill(inplace=True)
+        data.bfill(inplace=True)
 
         # Remove duplicates
-        combined_data.drop_duplicates(inplace=True)
+        data.drop_duplicates(inplace=True)
 
-        return combined_data
+        return data
 
-    def get_data_for_ticker(self, ticker):
+    def get_data_for_ticker(self, ticker: str) -> pd.DataFrame:
         """
         Retrieves data for a specific ticker.
 
@@ -66,28 +77,65 @@ class DataLoader:
             pd.DataFrame: A DataFrame containing the data for the specified ticker.
         """
         if ticker in self.tickers:
-            return self.load_data().loc[self.load_data()['Ticker'] == ticker]
+            return self.load_data().loc[self.load_data()["Ticker"] == ticker]
         else:
             return pd.DataFrame()
-        
-    def ariticdb_load(self, db_path):
-        """
-        Loads data from an AriticDB database.
 
-        Args:
-            db_path (str): Path to the AriticDB database file.
-        """
-        # Implement the logic to load data from the AriticDB database
-        pass
+    def store_data(self, collection_name: str, df: pd.DataFrame):
+        """Store the cleaned data into ArcticDB."""
+        lib = self.arctic_database.get_library(collection_name, create_if_missing=True)
+        lib.write("data", df)
 
-        
+    def read_data(self, collection_name: str, symbol: str = "data") -> pd.DataFrame:
+        """Read data from ArcticDB collection."""
+        lib = self.arctic_database.get_library(collection_name, create_if_missing=False)
+        df = lib.read(symbol).data
+        return df
+
+    def display_data(self, collection_name: str, symbol: str = "data", head: int = 10):
+        """Display data from ArcticDB collection with summary statistics."""
+        try:
+            df = self.read_data(collection_name, symbol)
+
+            print(f"\n{'=' * 60}")
+            print(f"Data from collection: '{collection_name}' (symbol: '{symbol}')")
+            print(f"{'=' * 60}\n")
+
+            print(f"Shape: {df.shape[0]} rows x {df.shape[1]} columns")
+            print(f"Date range: {df.index.min()} to {df.index.max()}\n")
+
+            print(f"First {head} rows:")
+            print(df.head(head))
+
+            print(f"\nLast {head} rows:")
+            print(df.tail(head))
+
+            print("\nSummary Statistics:")
+            print(df.describe())
+
+            print("\nColumn Names:")
+            print(df.columns.tolist())
+
+            print("\nData Types:")
+            print(df.dtypes)
+
+            print(f"\n{'=' * 60}\n")
+
+        except Exception as e:
+            print(f"Error reading data from collection '{collection_name}': {e}")
+
 
 def main():
     # Example usage
-    tickers = ['AAPL', 'MSFT', 'GOOGL']
-    data_loader = DataLoader(tickers, '2022-01-01', '2022-12-31')
-    data = data_loader.load_data()
+    tickers = ["AAPL", "MSFT", "GOOGL"]
+    data_loader = DataLoader(tickers, "2022-01-01", "2022-12-31")
+    data = data_loader.load_raw_data()
     print(data.head())
+
+    # Store and display data from ArcticDB
+    data_loader.store_data("financial_data", data)
+    data_loader.display_data("financial_data")
+
 
 if __name__ == "__main__":
     main()

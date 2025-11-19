@@ -1,49 +1,50 @@
 name: hrl_fund
 
 channels:
-  - pytorch       # Priority channel for PyTorch
-  - conda-forge   # Best channel for most packages
+  - pytorch # Priority channel for PyTorch
+  - conda-forge # Best channel for most packages
   - defaults
 
 dependencies:
   # --- Core Python & Data Stack ---
-  - python=3.10        # Or 3.11
+  - python=3.10 # Or 3.11
   - pip
-  - yfinance          # For fetching financial data
+  - yfinance # For fetching financial data
   - pandas
   - numpy
-  - h5py               # For saving/loading HDF5 data (processed features)
+  - h5py # For saving/loading HDF5 data (processed features)
 
   # --- Machine Learning & DRL ---
   - pytorch
   - torchvision
   - torchaudio
-  - cpuonly            # <-- IMPORTANT: For CPU-only build. See note below.
-  - scikit-learn       # For metrics, preprocessing, and benchmark models
-  - lightgbm           # Gradient boosting framework
-  - xgboost            # Another gradient boosting framework
-  - catboost           # Another gradient boosting framework
-  
+  - cpuonly # <-- IMPORTANT: For CPU-only build. See note below.
+  - scikit-learn # For metrics, preprocessing, and benchmark models
+  - lightgbm # Gradient boosting framework
+  - xgboost # Another gradient boosting framework
+  - catboost # Another gradient boosting framework
+
   # --- Environment & Simulation ---
-  - gymnasium          # The DRL environment toolkit (successor to Gym)
-  
+  - gymnasium # The DRL environment toolkit (successor to Gym)
+
   # --- Financial Analysis & Stats ---
-  - statsmodels        # For statistical tests (e.g., cointegration in StatArb)
-  - ta-lib             # For technical analysis features (much easier via conda)
-  - scipy              # For scientific computing (e.g., optimization routines)
-  - cvxpy              # For convex optimization (e.g., portfolio optimization)
-  - cvxopt             # Solver for cvxpy
-  - empyrical          # For financial performance metrics
-  - pyportfolioopt     # For portfolio optimization techniques
+  - statsmodels # For statistical tests (e.g., cointegration in StatArb)
+  - ta-lib # For technical analysis features (much easier via conda)
+  - scipy # For scientific computing (e.g., optimization routines)
+  - cvxpy # For convex optimization (e.g., portfolio optimization)
+  - cvxopt # Solver for cvxpy
+  - empyrical # For financial performance metrics
+  - pyportfolioopt # For portfolio optimization techniques
 
   # --- Tooling & Visualization ---
-  - jupyterlab         # For notebooks
+  - jupyterlab # For notebooks
   - matplotlib
   - seaborn
-  - tqdm               # For progress bars in training loops
+  - tqdm # For progress bars in training loops
 
   # --- Pip-installed packages ---
   # Add packages here that are not on conda or where pip is preferred
   - pip:
-    - stable-baselines3[extra]  # Core DRL library (PPO, DDPG, etc.)
-    - sb3-contrib               # Extra DRL algorithms (e.g., QRDQN)
+      - arcticdb # For time-series database management
+      - stable-baselines3[extra] # Core DRL library (PPO, DDPG, etc.)
+      - sb3-contrib # Extra DRL algorithms (e.g., QRDQN)
