@@ -6,45 +6,131 @@ channels:
   - defaults
 
 dependencies:
-  # --- Core Python & Data Stack ---
-  - python=3.10 # Or 3.11
+  # ============================================================================
+  # Core Python & Data Processing
+  # ============================================================================
+  - python=3.10
   - pip
-  - yfinance # For fetching financial data
-  - pandas
-  - numpy
-  - h5py # For saving/loading HDF5 data (processed features)
+  - numpy>=1.24.0
+  - pandas>=2.0.0
+  - scipy>=1.10.0
+  - scikit-learn>=1.3.0
 
-  # --- Machine Learning & DRL ---
-  - pytorch
+  # Data I/O
+  - h5py # HDF5 file format
+  - pyarrow # Parquet file format
+  - openpyxl # Excel file support
+  - xlrd # Excel file reading
+
+  # ============================================================================
+  # Financial Data & Analysis
+  # ============================================================================
+  - yfinance # Yahoo Finance data downloader
+  - pandas-datareader # Additional data sources
+  - statsmodels # Statistical models and tests (cointegration, etc.)
+  - empyrical-reloaded # Financial performance metrics (Sharpe, Sortino, etc.)
+
+  # Technical Analysis
+  - ta-lib # Technical analysis library (easier install via conda)
+
+  # Portfolio Optimization
+  - cvxpy # Convex optimization
+  - cvxopt # Solver for cvxpy
+
+  # ============================================================================
+  # Machine Learning & Deep Learning
+  # ============================================================================
+  # PyTorch ecosystem
+  - pytorch>=2.0.0
   - torchvision
   - torchaudio
-  - cpuonly # <-- IMPORTANT: For CPU-only build. See note below.
-  - scikit-learn # For metrics, preprocessing, and benchmark models
-  - lightgbm # Gradient boosting framework
-  - xgboost # Another gradient boosting framework
-  - catboost # Another gradient boosting framework
+  - cpuonly # Use 'cudatoolkit' instead for GPU support
 
-  # --- Environment & Simulation ---
-  - gymnasium # The DRL environment toolkit (successor to Gym)
+  # Tree-based models
+  - lightgbm
+  - xgboost
+  - catboost
 
-  # --- Financial Analysis & Stats ---
-  - statsmodels # For statistical tests (e.g., cointegration in StatArb)
-  - ta-lib # For technical analysis features (much easier via conda)
-  - scipy # For scientific computing (e.g., optimization routines)
-  - cvxpy # For convex optimization (e.g., portfolio optimization)
-  - cvxopt # Solver for cvxpy
-  - empyrical # For financial performance metrics
-  - pyportfolioopt # For portfolio optimization techniques
+  # ============================================================================
+  # Reinforcement Learning
+  # ============================================================================
+  - gymnasium # OpenAI Gym successor for RL environments
+  - pygame # For rendering some Gym environments
 
-  # --- Tooling & Visualization ---
-  - jupyterlab # For notebooks
-  - matplotlib
-  - seaborn
-  - tqdm # For progress bars in training loops
+  # ============================================================================
+  # Visualization & Plotting
+  # ============================================================================
+  - matplotlib>=3.7.0
+  - seaborn>=0.12.0
+  - plotly>=5.14.0
+  - bokeh # Interactive visualizations
+  - altair # Declarative statistical visualization
 
-  # --- Pip-installed packages ---
-  # Add packages here that are not on conda or where pip is preferred
+  # ============================================================================
+  # Jupyter & Notebooks
+  # ============================================================================
+  - jupyterlab>=4.0.0
+  - jupyter
+  - ipywidgets # Interactive widgets
+  - notebook
+  - ipykernel
+
+  # ============================================================================
+  # Development & Utilities
+  # ============================================================================
+  - tqdm # Progress bars
+  - python-dotenv # Environment variable management
+  - pyyaml # YAML file handling
+  - black # Code formatter
+  - flake8 # Linting
+  - pytest # Testing framework
+  - pytest-cov # Test coverage
+  - sphinx # Documentation generator
+
+  # ============================================================================
+  # Performance & Profiling
+  # ============================================================================
+  - numba # JIT compiler for numerical functions
+  - cython # C-extensions for Python
+  - joblib # Parallel processing
+  - dask # Parallel computing
+
+  # ============================================================================
+  # Pip-Only Packages
+  # ============================================================================
   - pip:
-      - arcticdb # For time-series database management
-      - stable-baselines3[extra] # Core DRL library (PPO, DDPG, etc.)
-      - sb3-contrib # Extra DRL algorithms (e.g., QRDQN)
+      # --- Database & Storage ---
+      - arcticdb # High-performance time-series database
+
+      # --- Deep Reinforcement Learning ---
+      - stable-baselines3[extra] # PPO, DDPG, SAC, TD3, etc.
+      - sb3-contrib # Additional algorithms (QRDQN, TQC, etc.)
+      - shimmy[gym-v21] # Compatibility layer for old Gym environments
+
+      # --- Experiment Tracking & MLOps ---
+      - tensorboard # Training visualization
+      - mlflow # Experiment tracking and model registry
+      - optuna # Hyperparameter optimization
+
+      # --- Technical Analysis (pip versions) ---
+      - ta # Alternative technical analysis library
+
+      # --- Portfolio & Risk Management ---
+      - pyfolio-reloaded # Portfolio analysis and risk metrics
+      - PyPortfolioOpt # Modern portfolio theory optimization
+      - quantstats # Portfolio analytics
+      - riskfolio-lib # Portfolio optimization and risk analysis
+
+      # --- Backtesting Frameworks ---
+      - vectorbt # Fast vectorized backtesting
+      - backtrader # Event-driven backtesting
+
+      # --- Networking & APIs ---
+      - requests # HTTP library
+      - websockets # WebSocket client/server
+      - aiohttp # Async HTTP client/server
+
+      # --- Additional Math/Stats ---
+      - arch # ARCH/GARCH models for volatility
+      - hurst # Hurst exponent calculation
+      - pykalman # Kalman filtering
