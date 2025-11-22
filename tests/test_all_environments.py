@@ -99,13 +99,13 @@ def test_environment(env_name, env_class, data, **kwargs):
         # Create environment
         env = env_class(data, **kwargs)
 
-        print(f"✓ Environment created")
+        print("✓ Environment created")
         print(f"  Observation space: {env.observation_space.shape}")
         print(f"  Action space: {env.action_space}")
 
         # Reset
         obs, info = env.reset()
-        print(f"✓ Reset successful")
+        print("✓ Reset successful")
         print(f"  Initial observation shape: {obs.shape}")
         print(f"  Initial portfolio: ${env.portfolio_value:,.2f}")
 
