@@ -52,6 +52,7 @@ class FactorTrackingEnv(BaseTradingEnv):
             window_size: Lookback for statistics
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.num_factors = num_factors
         self.rebalance_frequency = rebalance_frequency
@@ -67,6 +68,7 @@ class FactorTrackingEnv(BaseTradingEnv):
         self.factor_exposures = np.zeros(num_factors)
         self.last_rebalance = 0
         self.turnover = 0.0
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: Discrete actions for each factor exposure
         # 0 = Short (-1), 1 = Neutral (0), 2 = Long (+1)
@@ -125,6 +127,21 @@ class FactorTrackingEnv(BaseTradingEnv):
                 returns.append(np.random.normal(0.0005, 0.01))
 
         return np.array(returns)
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "factor_weights": self.factor_weights.tolist(),
+            "factor_exposures": self.factor_exposures.tolist(),
+            "total_trades": self.total_trades,
+            "turnover": self.turnover,
+        }
 
     def _get_observation(self) -> np.ndarray:
         """Get current observation."""
@@ -386,7 +403,7 @@ class FactorTrackingEnv(BaseTradingEnv):
         self.unrealized_pnl = pnl
         self.portfolio_value = self.cash + pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for factor tracking.
 
@@ -424,6 +441,7 @@ class FactorTrackingEnv(BaseTradingEnv):
         self.factor_exposures = np.zeros(self.num_factors)
         self.last_rebalance = 0
         self.turnover = 0.0
+        self.previous_portfolio_value = self.initial_capital
 
         return self._get_observation(), info
 

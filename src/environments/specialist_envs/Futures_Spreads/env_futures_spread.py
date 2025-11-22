@@ -53,6 +53,7 @@ class FuturesSpreadsEnv(BaseTradingEnv):
             window_size: Lookback for statistics
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.spread_type = spread_type
         self.contract_size = contract_size
@@ -66,6 +67,8 @@ class FuturesSpreadsEnv(BaseTradingEnv):
         self.near_contracts = 0.0
         self.far_contracts = 0.0
         self.margin_used = 0.0
+        self.unrealized_pnl = 0.0  # Track unrealized P&L from spread positions
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: spread position in [-1, 1]
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
@@ -95,6 +98,20 @@ class FuturesSpreadsEnv(BaseTradingEnv):
             return far_price - near_price
         else:  # inter_commodity
             return far_price / near_price if near_price > 0 else 1.0
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "spread_position": self.spread_position,
+            "margin_used": self.margin_used,
+            "total_trades": self.total_trades,
+        }
 
     def _get_observation(self) -> np.ndarray:
         """Get current observation."""
@@ -341,7 +358,7 @@ class FuturesSpreadsEnv(BaseTradingEnv):
 
         self.portfolio_value = self.cash + self.margin_used + self.unrealized_pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for futures spread trading.
 
@@ -384,6 +401,8 @@ class FuturesSpreadsEnv(BaseTradingEnv):
         self.near_contracts = 0.0
         self.far_contracts = 0.0
         self.margin_used = 0.0
+        self.unrealized_pnl = 0.0
+        self.previous_portfolio_value = self.initial_capital
 
         return self._get_observation(), info
 

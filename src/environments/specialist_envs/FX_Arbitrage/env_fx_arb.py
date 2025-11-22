@@ -51,6 +51,7 @@ class FXArbitrageEnv(BaseTradingEnv):
             window_size: Lookback for statistics
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.currency_pairs = currency_pairs
         self.num_pairs = len(currency_pairs)
@@ -63,6 +64,7 @@ class FXArbitrageEnv(BaseTradingEnv):
         self.positions = np.zeros(self.num_pairs)  # Position in each pair
         self.entry_rates = np.zeros(self.num_pairs)
         self.total_funding_cost = 0.0
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: position size for each pair in [-1, 1]
         # Will be scaled by leverage and capital
@@ -139,6 +141,21 @@ class FXArbitrageEnv(BaseTradingEnv):
             return deviation
         else:
             return 0.0
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "positions": self.positions.tolist(),
+            "total_trades": self.total_trades,
+            "total_funding_cost": self.total_funding_cost,
+            "triangle_deviation": self._calculate_triangle_deviation(),
+        }
 
     def _get_observation(self) -> np.ndarray:
         """Get current observation."""
@@ -296,7 +313,7 @@ class FXArbitrageEnv(BaseTradingEnv):
         self.unrealized_pnl = total_pnl
         self.portfolio_value = self.cash + total_pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for FX arbitrage.
 
@@ -334,12 +351,16 @@ class FXArbitrageEnv(BaseTradingEnv):
 
     def reset(self, seed=None, options=None) -> Tuple[np.ndarray, Dict]:
         """Reset environment."""
+        # Call super().reset() first
         obs, info = super().reset(seed=seed, options=options)
 
+        # Override positions dict with numpy array (base class sets it to {})
         self.positions = np.zeros(self.num_pairs)
         self.entry_rates = np.zeros(self.num_pairs)
         self.total_funding_cost = 0.0
+        self.previous_portfolio_value = self.initial_capital
 
+        # Re-get observation with correct positions
         return self._get_observation(), info
 
 

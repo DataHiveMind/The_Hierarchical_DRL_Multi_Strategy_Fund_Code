@@ -55,6 +55,7 @@ class DeltaHedgingEnv(BaseTradingEnv):
             rehedge_frequency: Steps between rehedges
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.option_position = option_position
         self.strike_price = strike_price
@@ -73,6 +74,7 @@ class DeltaHedgingEnv(BaseTradingEnv):
         self.theta = 0.0
         self.total_hedge_cost = 0.0
         self.hedge_errors = []
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: hedge ratio multiplier [-1.5, 1.5]
         # 1.0 = theoretical delta, <1 = under-hedge, >1 = over-hedge
@@ -127,6 +129,22 @@ class DeltaHedgingEnv(BaseTradingEnv):
             "vega": vega,
             "theta": theta,
             "rho": rho,
+        }
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "hedge_shares": self.hedge_shares,
+            "theoretical_delta": self.theoretical_delta,
+            "total_trades": self.total_trades,
+            "total_hedge_cost": self.total_hedge_cost,
+            "time_to_expiry": self.time_to_expiry,
         }
 
     def _get_observation(self) -> np.ndarray:
@@ -286,7 +304,7 @@ class DeltaHedgingEnv(BaseTradingEnv):
         self.unrealized_pnl = option_delta_pnl + gamma_pnl + theta_pnl + hedge_pnl
         self.portfolio_value = self.cash + self.unrealized_pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for delta hedging.
 
@@ -328,6 +346,7 @@ class DeltaHedgingEnv(BaseTradingEnv):
         self.time_to_expiry = self.initial_tte
         self.total_hedge_cost = 0.0
         self.hedge_errors = []
+        self.previous_portfolio_value = self.initial_capital
 
         return self._get_observation(), info
 

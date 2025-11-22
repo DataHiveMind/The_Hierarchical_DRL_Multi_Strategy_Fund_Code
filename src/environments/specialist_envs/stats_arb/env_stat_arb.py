@@ -13,13 +13,8 @@ import pandas as pd
 import gymnasium as gym
 from gymnasium import spaces
 from typing import Dict, Tuple, Optional
-import sys
-from pathlib import Path
 
-# Add parent directory to path
-sys.path.append(str(Path(__file__).parent.parent.parent.parent))
-
-from src.environments.specialist_envs.base_trading_env import BaseTradingEnv
+from ..base_trading_env import BaseTradingEnv
 
 
 class StatisticalArbitrageEnv(BaseTradingEnv):
@@ -111,21 +106,44 @@ class StatisticalArbitrageEnv(BaseTradingEnv):
 
         # Technical indicators on spread
         if self._current_step >= 20:
-            recent_spread = (
-                self.df["spread"]
-                .iloc[self._current_step - 20 : self._current_step]
-                .values
-            )
+            # Get recent spread values - calculate if not available
+            if "spread" in self.df.columns:
+                recent_spread = (
+                    self.df["spread"]
+                    .iloc[self._current_step - 20 : self._current_step]
+                    .values
+                )
+            else:
+                # Calculate spread from prices if not pre-calculated
+                recent_data = self.df.iloc[self._current_step - 20 : self._current_step]
+                recent_spread = (
+                    recent_data.get("asset1_price", pd.Series([100.0] * 20)).values
+                    - hedge_ratio
+                    * recent_data.get("asset2_price", pd.Series([100.0] * 20)).values
+                )
+
             sma_20 = np.mean(recent_spread)
             std_20 = np.std(recent_spread)
             spread_momentum = spread - recent_spread[0]
 
             if self._current_step >= 60:
-                longer_spread = (
-                    self.df["spread"]
-                    .iloc[self._current_step - 60 : self._current_step]
-                    .values
-                )
+                if "spread" in self.df.columns:
+                    longer_spread = (
+                        self.df["spread"]
+                        .iloc[self._current_step - 60 : self._current_step]
+                        .values
+                    )
+                else:
+                    longer_data = self.df.iloc[
+                        self._current_step - 60 : self._current_step
+                    ]
+                    longer_spread = (
+                        longer_data.get("asset1_price", pd.Series([100.0] * 60)).values
+                        - hedge_ratio
+                        * longer_data.get(
+                            "asset2_price", pd.Series([100.0] * 60)
+                        ).values
+                    )
                 sma_60 = np.mean(longer_spread)
                 std_60 = np.std(longer_spread)
             else:

@@ -56,6 +56,7 @@ class MarketMakingEnv(BaseTradingEnv):
             window_size: Lookback period for features
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.max_inventory = max_inventory
         self.tick_size = tick_size
@@ -73,6 +74,8 @@ class MarketMakingEnv(BaseTradingEnv):
         self.ask_filled = False
         self.total_fills = 0
         self.adverse_selection_count = 0
+        self.unrealized_pnl = 0.0  # Track unrealized P&L from inventory
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: [bid_spread_offset, ask_spread_offset] in [-1, 1]
         # Will be scaled to actual spread range
@@ -94,6 +97,22 @@ class MarketMakingEnv(BaseTradingEnv):
         self.observation_space = spaces.Box(
             low=-np.inf, high=np.inf, shape=(25,), dtype=np.float32
         )
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "inventory": self.inventory,
+            "total_trades": self.total_trades,
+            "total_fills": self.total_fills,
+            "adverse_selection_rate": self.adverse_selection_count
+            / max(self.total_fills, 1),
+        }
 
     def _get_observation(self) -> np.ndarray:
         """Get current observation."""
@@ -313,7 +332,7 @@ class MarketMakingEnv(BaseTradingEnv):
         self.unrealized_pnl = self.inventory * current_price
         self.portfolio_value = self.cash + self.unrealized_pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for market making.
 
@@ -363,6 +382,8 @@ class MarketMakingEnv(BaseTradingEnv):
         self.ask_filled = False
         self.total_fills = 0
         self.adverse_selection_count = 0
+        self.unrealized_pnl = 0.0
+        self.previous_portfolio_value = self.initial_capital
 
         return self._get_observation(), info
 

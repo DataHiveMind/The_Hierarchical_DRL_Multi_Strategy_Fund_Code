@@ -6,7 +6,7 @@ Each environment is designed for specific agent types (PPO, DDPG, DQN).
 """
 
 # Statistical Arbitrage (PPO)
-from .Statistical_Arbitrage.env_stat_arb import StatisticalArbitrageEnv
+from .stats_arb.env_stat_arb import StatisticalArbitrageEnv
 
 # Market Making (DDPG)
 from .Market_Making.env_market_maker import MarketMakingEnv

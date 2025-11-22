@@ -141,6 +141,26 @@ class BaseTradingEnv(gym.Env, abc.ABC):
         # Validation
         self._validate_config()
 
+    @property
+    def current_step(self) -> int:
+        """Expose current_step for compatibility with specialist environments."""
+        return self._current_step
+
+    @property
+    def initial_capital(self) -> float:
+        """Alias for initial_balance for compatibility."""
+        return self.initial_balance
+
+    @property
+    def cash(self) -> float:
+        """Alias for balance for compatibility."""
+        return self.balance
+
+    @cash.setter
+    def cash(self, value: float):
+        """Allow setting cash via the alias."""
+        self.balance = value
+
     def _validate_config(self):
         """Validate environment configuration."""
         if self.initial_balance <= 0:
@@ -445,8 +465,11 @@ class BaseTradingEnv(gym.Env, abc.ABC):
         self.total_trades = 0
         self.total_fees = 0.0
 
-        # Reset positions
-        self.positions = {}
+        # Reset positions (but preserve if child class uses different type)
+        if isinstance(self.positions, dict):
+            self.positions = {}
+        elif isinstance(self.positions, np.ndarray):
+            self.positions = np.zeros_like(self.positions)
         self.position_history = []
 
         # Reset tracking

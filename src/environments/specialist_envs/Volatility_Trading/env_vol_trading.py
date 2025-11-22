@@ -52,6 +52,7 @@ class VolatilityTradingEnv(BaseTradingEnv):
             window_size: Lookback for realized vol calculation
         """
         super().__init__(data, initial_capital)
+        self.data = self.df  # Alias for compatibility
 
         self.option_multiplier = option_multiplier
         self.rehedge_threshold = rehedge_threshold
@@ -66,6 +67,7 @@ class VolatilityTradingEnv(BaseTradingEnv):
         self.gamma = 0.0
         self.theta = 0.0
         self.total_hedge_cost = 0.0
+        self.previous_portfolio_value = initial_capital  # Track for reward calculation
 
         # Action space: vega position in [-1, 1]
         # Will be scaled to actual position size
@@ -172,6 +174,22 @@ class VolatilityTradingEnv(BaseTradingEnv):
         theta = theta / 365  # Per day
 
         return {"delta": delta, "gamma": gamma, "vega": vega, "theta": theta}
+
+    def _get_obs(self) -> np.ndarray:
+        """Get current observation (required by base class)."""
+        return self._get_observation()
+
+    def _get_info(self) -> Dict:
+        """Get auxiliary diagnostic information."""
+        return {
+            "portfolio_value": self.portfolio_value,
+            "cash": self.cash,
+            "vega_position": self.vega_position,
+            "delta_position": self.delta_position,
+            "hedge_position": self.hedge_position,
+            "total_trades": self.total_trades,
+            "total_hedge_cost": self.total_hedge_cost,
+        }
 
     def _get_observation(self) -> np.ndarray:
         """Get current observation."""
@@ -336,7 +354,7 @@ class VolatilityTradingEnv(BaseTradingEnv):
         self.unrealized_pnl = vega_pnl + theta_pnl + gamma_pnl + hedge_pnl
         self.portfolio_value = self.cash + self.unrealized_pnl
 
-    def _calculate_reward(self) -> float:
+    def _calculate_reward(self, action) -> float:
         """
         Calculate reward for volatility trading.
 
@@ -373,6 +391,7 @@ class VolatilityTradingEnv(BaseTradingEnv):
         self.theta = 0.0
         self.total_hedge_cost = 0.0
         self.previous_iv = self._get_implied_vol()
+        self.previous_portfolio_value = self.initial_capital
 
         return self._get_observation(), info
 
