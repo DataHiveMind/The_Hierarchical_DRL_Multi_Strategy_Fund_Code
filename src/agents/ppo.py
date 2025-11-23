@@ -15,7 +15,7 @@ import gymnasium as gym
 from collections import deque
 import os
 
-from src.agents.policy_networks import PolicyValueNetwork
+from .policy_networks import PolicyValueNetwork
 
 
 class PPOAgent:

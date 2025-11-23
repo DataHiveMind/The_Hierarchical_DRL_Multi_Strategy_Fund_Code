@@ -16,7 +16,7 @@ from collections import deque
 import random
 import os
 
-from src.agents.policy_networks import QNetwork
+from .policy_networks import QNetwork
 
 
 class ReplayBuffer:
@@ -131,11 +131,11 @@ class DQNAgent:
 
         # Q-Networks
         self.q_network = QNetwork(
-            self.state_dim, self.n_actions, hidden_dims, use_dueling=use_dueling
+            self.state_dim, self.n_actions, hidden_dims, dueling=use_dueling
         ).to(self.device)
 
         self.target_network = QNetwork(
-            self.state_dim, self.n_actions, hidden_dims, use_dueling=use_dueling
+            self.state_dim, self.n_actions, hidden_dims, dueling=use_dueling
         ).to(self.device)
         self.target_network.load_state_dict(self.q_network.state_dict())
         self.target_network.eval()
@@ -268,9 +268,7 @@ class DQNAgent:
         print(f"Training DQN agent for {total_timesteps} timesteps...")
         print(f"Device: {self.device}")
         print(f"Warmup steps: {warmup_steps}")
-        print(
-            f"Dueling: {self.q_network.use_dueling}, Double DQN: {self.use_double_dqn}"
-        )
+        print(f"Dueling: {self.q_network.dueling}, Double DQN: {self.use_double_dqn}")
 
         for timestep in range(1, total_timesteps + 1):
             self.steps = timestep

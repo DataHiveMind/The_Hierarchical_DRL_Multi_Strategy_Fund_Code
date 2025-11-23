@@ -16,7 +16,7 @@ from collections import deque
 import random
 import os
 
-from src.agents.policy_networks import ActorNetwork, CriticNetwork
+from .policy_networks import ActorNetwork, CriticNetwork
 
 
 class ReplayBuffer:

@@ -83,8 +83,16 @@ class DataLoader:
 
     def store_data(self, collection_name: str, df: pd.DataFrame):
         """Store the cleaned data into ArcticDB."""
+        # Flatten MultiIndex columns if present (ArcticDB doesn't support MultiIndex)
+        df_to_store = df.copy()
+        if isinstance(df_to_store.columns, pd.MultiIndex):
+            # Flatten column names by joining levels with underscore
+            df_to_store.columns = [
+                "_".join(map(str, col)).strip("_") for col in df_to_store.columns.values
+            ]
+
         lib = self.arctic_database.get_library(collection_name, create_if_missing=True)
-        lib.write("data", df)
+        lib.write("data", df_to_store)
 
     def read_data(self, collection_name: str, symbol: str = "data") -> pd.DataFrame:
         """Read data from ArcticDB collection."""

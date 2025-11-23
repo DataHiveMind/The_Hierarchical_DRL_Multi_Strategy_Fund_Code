@@ -1,0 +1,33 @@
+CIO ALLOCATOR TRAINING CONFIGURATION
+======================================================================
+
+Training Date: 2025-11-22 18:54:57
+
+Environment Settings:
+  Initial Capital: $10,000,000
+  Number of Strategies: 7
+  Lookback Window: 20
+  Rebalance Frequency: 5
+  Transaction Cost: 0.0010
+
+Agent Settings:
+  Algorithm: PPO
+  Learning Rate: 3e-4
+  Hidden Dimensions: (256, 256)
+  Gamma: 0.99
+  GAE Lambda: 0.95
+  Clip Epsilon: 0.2
+  N Steps: 2048
+  Batch Size: 64
+  N Epochs: 10
+
+Training Results:
+  Total Episodes: 217
+  Mean Reward: 290.37
+  Final Avg Reward (last 10): 377.54
+
+Evaluation Results:
+  Episodes: 10
+  Mean Reward: 382.68
+  Mean Return: 101.81%
+  Mean Sharpe: 42.49

@@ -10,10 +10,10 @@ Each agent is designed to work with custom trading environments and can be
 trained for different specialist trading strategies.
 """
 
-from src.agents.ppo import PPOAgent
-from src.agents.ddpg import DDPGAgent
-from src.agents.dqn import DQNAgent
-from src.agents.policy_networks import (
+from .ppo import PPOAgent
+from .ddpg import DDPGAgent
+from .dqn import DQNAgent
+from .policy_networks import (
     ActorNetwork,
     CriticNetwork,
     QNetwork,

@@ -1,0 +1,31 @@
+Training completed: 2025-11-23 13:36:23.754041
+Total specialists: 7
+
+statistical_arbitrage:
+  Algorithm: DDPG
+  Model: statistical_arbitrage/statistical_arbitrage_ddpg.pt
+
+market_making:
+  Algorithm: DDPG
+  Model: market_making/market_making_ddpg.pt
+
+factor_tracking:
+  Algorithm: DQN
+  Model: factor_tracking/factor_tracking_dqn.pt
+
+volatility_trading:
+  Algorithm: DDPG
+  Model: volatility_trading/volatility_trading_ddpg.pt
+
+delta_hedging:
+  Algorithm: DDPG
+  Model: delta_hedging/delta_hedging_ddpg.pt
+
+futures_spreads:
+  Algorithm: DDPG
+  Model: futures_spreads/futures_spreads_ddpg.pt
+
+fx_arbitrage:
+  Algorithm: DDPG
+  Model: fx_arbitrage/fx_arbitrage_ddpg.pt
+
