@@ -82,12 +82,14 @@ class BacktestEngine:
         else:
             state = reset_result  # Just observation
 
-        # Storage for tracking
-        equity_curve = [self.initial_capital]
-        positions = []
-        actions_taken = []
-        rewards = []
-        timestamps = []
+        # Pre-allocate arrays for tracking (much faster than appending to lists)
+        max_steps = len(test_data)
+        equity_curve = np.zeros(max_steps + 1)
+        equity_curve[0] = self.initial_capital
+        positions = np.zeros(max_steps)
+        actions_taken = [None] * max_steps  # Actions can be arrays
+        rewards = np.zeros(max_steps)
+        timestamps = [None] * max_steps
 
         done = False
         step = 0
@@ -128,23 +130,31 @@ class BacktestEngine:
             if isinstance(next_state, tuple):
                 next_state = next_state[0]
 
-            # Record data
+            # Record data (using pre-allocated arrays)
             equity = info.get(
                 "portfolio_value", info.get("total_value", self.initial_capital)
             )
-            equity_curve.append(equity)
-            positions.append(info.get("position", 0))
-            actions_taken.append(action)
-            rewards.append(reward)
+            equity_curve[step + 1] = equity
+            positions[step] = info.get("position", 0)
+            actions_taken[step] = action
+            rewards[step] = reward
 
             if step < len(test_data):
-                timestamps.append(
+                timestamps[step] = (
                     test_data.index[step] if hasattr(test_data, "index") else step
                 )
 
             state = next_state
             step += 1
 
+        # Trim arrays to actual size used
+        actual_steps = step
+        equity_curve = equity_curve[:actual_steps + 1]
+        positions = positions[:actual_steps]
+        actions_taken = actions_taken[:actual_steps]
+        rewards = rewards[:actual_steps]
+        timestamps = timestamps[:actual_steps]
+        
         # Create results dataframe
         results_df = pd.DataFrame(
             {
@@ -155,7 +165,7 @@ class BacktestEngine:
             }
         )
 
-        if timestamps:
+        if timestamps and timestamps[0] is not None:
             results_df.index = timestamps
 
         # Calculate metrics
@@ -207,13 +217,15 @@ class BacktestEngine:
         else:
             state = reset_result  # Just observation
 
-        # Storage for tracking
-        equity_curve = [self.initial_capital]
-        allocations = []
-        specialist_returns = []
-        actions_taken = []
-        rewards = []
-        timestamps = []
+        # Pre-allocate arrays for tracking
+        max_steps = len(test_data)
+        equity_curve = np.zeros(max_steps + 1)
+        equity_curve[0] = self.initial_capital
+        allocations = [None] * max_steps
+        specialist_returns = [None] * max_steps
+        actions_taken = [None] * max_steps
+        rewards = np.zeros(max_steps)
+        timestamps = [None] * max_steps
 
         done = False
         step = 0
@@ -256,41 +268,50 @@ class BacktestEngine:
             if isinstance(next_state, tuple):
                 next_state = next_state[0]
 
-            # Record data
+            # Record data (using pre-allocated arrays)
             equity = info.get("portfolio_value", self.initial_capital)
-            equity_curve.append(equity)
+            equity_curve[step + 1] = equity
 
-            # Extract allocations (typically 3 weights that sum to 1)
+            # Extract allocations (typically 7 weights that sum to 1)
             if isinstance(action, (list, np.ndarray)):
-                allocations.append(action)
+                allocations[step] = action
             else:
-                allocations.append([action])
+                allocations[step] = [action]
 
-            actions_taken.append(action)
-            rewards.append(reward)
+            actions_taken[step] = action
+            rewards[step] = reward
 
             # Record specialist returns if available
             spec_returns = info.get("specialist_returns", [])
-            specialist_returns.append(spec_returns)
+            specialist_returns[step] = spec_returns
 
             if step < len(test_data):
-                timestamps.append(
+                timestamps[step] = (
                     test_data.index[step] if hasattr(test_data, "index") else step
                 )
 
             state = next_state
             step += 1
 
+        # Trim arrays to actual size used
+        actual_steps = step
+        equity_curve = equity_curve[:actual_steps + 1]
+        allocations = allocations[:actual_steps]
+        specialist_returns = specialist_returns[:actual_steps]
+        actions_taken = actions_taken[:actual_steps]
+        rewards = rewards[:actual_steps]
+        timestamps = timestamps[:actual_steps]
+        
         # Create results dataframe
         results_df = pd.DataFrame({"equity": equity_curve[1:], "reward": rewards})
 
         # Add allocation columns
-        if allocations:
-            alloc_array = np.array(allocations)
+        if allocations and allocations[0] is not None:
+            alloc_array = np.array([a for a in allocations if a is not None])
             for i in range(alloc_array.shape[1]):
                 results_df[f"allocation_{i}"] = alloc_array[:, i]
 
-        if timestamps:
+        if timestamps and timestamps[0] is not None:
             results_df.index = timestamps
 
         # Calculate metrics

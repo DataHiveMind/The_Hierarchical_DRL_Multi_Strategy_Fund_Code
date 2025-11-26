@@ -114,14 +114,14 @@ class FeatureEngineer:
                 window=window
             ).std() * np.sqrt(252)
 
-            # Parkinson volatility (uses high-low range)
+            # Parkinson volatility (uses high-low range) - vectorized
             if "High" in self.df.columns and "Low" in self.df.columns:
                 hl_ratio = np.log(self.df["High"] / self.df["Low"])
+                # Vectorized calculation: mean of squared values = sum(x^2) / n
+                hl_squared = hl_ratio ** 2
+                parkinson_factor = 1 / (4 * np.log(2))
                 self.df[f"parkinson_vol_{window}d"] = np.sqrt(
-                    hl_ratio.rolling(window=window).apply(
-                        lambda x: (1 / (4 * np.log(2))) * np.mean(x**2)
-                    )
-                    * 252
+                    hl_squared.rolling(window=window).mean() * parkinson_factor * 252
                 )
 
             # Realized volatility (sum of squared returns)

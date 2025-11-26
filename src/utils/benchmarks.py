@@ -125,29 +125,37 @@ class MeanVarianceBenchmark:
         Returns:
             Equity curve
         """
-        equity_curve = [initial_capital]
-        current_weights = (
-            np.ones(specialist_returns.shape[1]) / specialist_returns.shape[1]
-        )
-
-        for i in range(len(specialist_returns)):
-            # Rebalance quarterly
-            if i > self.lookback_days and i % self.rebalance_freq == 0:
+        # Vectorized approach - calculate all rebalancing points upfront
+        n_periods = len(specialist_returns)
+        equity_values = np.zeros(n_periods + 1)
+        equity_values[0] = initial_capital
+        
+        # Initialize weights
+        current_weights = np.ones(specialist_returns.shape[1]) / specialist_returns.shape[1]
+        
+        # Pre-calculate rebalancing indices
+        rebalance_indices = [i for i in range(self.lookback_days, n_periods, self.rebalance_freq)]
+        
+        # Convert returns to numpy for faster access
+        returns_array = specialist_returns.values
+        
+        # Track next rebalance index
+        rebalance_idx = 0
+        
+        for i in range(n_periods):
+            # Check if we need to rebalance
+            if rebalance_idx < len(rebalance_indices) and i == rebalance_indices[rebalance_idx]:
                 lookback_returns = specialist_returns.iloc[i - self.lookback_days : i]
                 current_weights = self.optimize_portfolio(lookback_returns)
                 self.weights_history.append(current_weights)
-
-            # Calculate portfolio return
-            period_returns = specialist_returns.iloc[i].values
-            portfolio_return = np.dot(current_weights, period_returns)
-
-            # Update equity
-            # Update equity
-            new_equity = equity_curve[-1] * (1 + portfolio_return)
-            equity_curve.append(new_equity)
-
-        # Convert to Series
-        equity_series = pd.Series(equity_curve[1:], index=specialist_returns.index)
+                rebalance_idx += 1
+            
+            # Calculate portfolio return using vectorized dot product
+            portfolio_return = np.dot(current_weights, returns_array[i])
+            equity_values[i + 1] = equity_values[i] * (1 + portfolio_return)
+        
+        # Convert to Series (skip initial capital)
+        equity_series = pd.Series(equity_values[1:], index=specialist_returns.index)
         
         # Prepend initial capital
         if isinstance(equity_series.index, pd.DatetimeIndex):
