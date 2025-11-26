@@ -1,4 +1,4 @@
-Training completed: 2025-11-23 13:36:23.754041
+Training completed: 2025-11-26 12:13:11.199907
 Total specialists: 7
 
 statistical_arbitrage:

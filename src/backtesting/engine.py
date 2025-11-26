@@ -74,7 +74,13 @@ class BacktestEngine:
                 f"Environment {type(env).__name__} has no 'data' or 'df' attribute"
             )
 
-        state = env.reset()
+        reset_result = env.reset()
+        
+        # Handle different reset() return formats (Gym 0.26+ returns tuple)
+        if isinstance(reset_result, tuple):
+            state = reset_result[0]  # (observation, info)
+        else:
+            state = reset_result  # Just observation
 
         # Storage for tracking
         equity_curve = [self.initial_capital]
@@ -99,7 +105,28 @@ class BacktestEngine:
                     action = agent.select_action(state, deterministic=deterministic)
 
             # Take action in environment
-            next_state, reward, done, info = env.step(action)
+            try:
+                step_result = env.step(action)
+            except IndexError:
+                # Environment ran out of data
+                print(f"  Info: Environment reached end of data at step {step}")
+                done = True
+                break
+            
+            # Handle different step() return formats
+            if len(step_result) == 5:
+                # Gym 0.26+: (obs, reward, terminated, truncated, info)
+                next_state, reward, terminated, truncated, info = step_result
+                done = terminated or truncated
+            elif len(step_result) == 4:
+                # Gym <0.26: (obs, reward, done, info)
+                next_state, reward, done, info = step_result
+            else:
+                raise ValueError(f"Unexpected step() return format: {len(step_result)} values")
+            
+            # Ensure next_state is observation only (not a tuple)
+            if isinstance(next_state, tuple):
+                next_state = next_state[0]
 
             # Record data
             equity = info.get(
@@ -172,7 +199,13 @@ class BacktestEngine:
             Dictionary containing backtest results
         """
         # Reset environment
-        state = env.reset()
+        reset_result = env.reset()
+        
+        # Handle different reset() return formats (Gym 0.26+ returns tuple)
+        if isinstance(reset_result, tuple):
+            state = reset_result[0]  # (observation, info)
+        else:
+            state = reset_result  # Just observation
 
         # Storage for tracking
         equity_curve = [self.initial_capital]
@@ -188,10 +221,40 @@ class BacktestEngine:
         while not done and step < len(test_data) - 1:
             # Select allocation action
             with torch.no_grad():
-                action = master_agent.select_action(state, deterministic=deterministic)
+                action_result = master_agent.select_action(state, deterministic=deterministic)
+                
+                # PPO returns (action, log_prob, value), extract just action
+                if isinstance(action_result, tuple):
+                    action = action_result[0]
+                else:
+                    action = action_result
+                
+                # Ensure action is a 1D numpy array
+                action = np.array(action).flatten()
 
             # Take action in environment
-            next_state, reward, done, info = env.step(action)
+            try:
+                step_result = env.step(action)
+            except IndexError:
+                # Environment ran out of data
+                print(f"  Info: Environment reached end of data at step {step}")
+                done = True
+                break
+            
+            # Handle different step() return formats
+            if len(step_result) == 5:
+                # Gym 0.26+: (obs, reward, terminated, truncated, info)
+                next_state, reward, terminated, truncated, info = step_result
+                done = terminated or truncated
+            elif len(step_result) == 4:
+                # Gym <0.26: (obs, reward, done, info)
+                next_state, reward, done, info = step_result
+            else:
+                raise ValueError(f"Unexpected step() return format: {len(step_result)} values")
+            
+            # Ensure next_state is observation only (not a tuple)
+            if isinstance(next_state, tuple):
+                next_state = next_state[0]
 
             # Record data
             equity = info.get("portfolio_value", self.initial_capital)

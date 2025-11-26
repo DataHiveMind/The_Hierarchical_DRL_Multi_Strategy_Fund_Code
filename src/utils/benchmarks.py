@@ -35,11 +35,18 @@ class EqualWeightBenchmark:
         # Equal weight allocation
         portfolio_returns = specialist_returns.mean(axis=1)
         equity_curve = initial_capital * (1 + portfolio_returns).cumprod()
+        
+        # Prepend initial capital
+        if isinstance(equity_curve.index, pd.DatetimeIndex):
+            initial_index = equity_curve.index[0] - pd.Timedelta(days=1)
+        else:
+            initial_index = equity_curve.index[0] - 1
+            
         equity_curve = pd.concat(
             [
                 pd.Series(
                     [initial_capital],
-                    index=[equity_curve.index[0] - pd.Timedelta(days=1)],
+                    index=[initial_index],
                 ),
                 equity_curve,
             ]
@@ -135,16 +142,24 @@ class MeanVarianceBenchmark:
             portfolio_return = np.dot(current_weights, period_returns)
 
             # Update equity
+            # Update equity
             new_equity = equity_curve[-1] * (1 + portfolio_return)
             equity_curve.append(new_equity)
 
         # Convert to Series
         equity_series = pd.Series(equity_curve[1:], index=specialist_returns.index)
+        
+        # Prepend initial capital
+        if isinstance(equity_series.index, pd.DatetimeIndex):
+            initial_index = equity_series.index[0] - pd.Timedelta(days=1)
+        else:
+            initial_index = equity_series.index[0] - 1
+            
         equity_series = pd.concat(
             [
                 pd.Series(
                     [initial_capital],
-                    index=[equity_series.index[0] - pd.Timedelta(days=1)],
+                    index=[initial_index],
                 ),
                 equity_series,
             ]
@@ -217,11 +232,18 @@ class RiskParityBenchmark:
 
         # Convert to Series
         equity_series = pd.Series(equity_curve[1:], index=specialist_returns.index)
+        
+        # Prepend initial capital
+        if isinstance(equity_series.index, pd.DatetimeIndex):
+            initial_index = equity_series.index[0] - pd.Timedelta(days=1)
+        else:
+            initial_index = equity_series.index[0] - 1
+            
         equity_series = pd.concat(
             [
                 pd.Series(
                     [initial_capital],
-                    index=[equity_series.index[0] - pd.Timedelta(days=1)],
+                    index=[initial_index],
                 ),
                 equity_series,
             ]
@@ -230,7 +252,7 @@ class RiskParityBenchmark:
         return equity_series
 
 
-class EnsembleBenchmark:
+class FullEnsembleBenchmark:
     """Benchmark 3: Run all specialists independently with full capital and sum P&L."""
 
     def __init__(self, initial_capital: float = 1000000):
@@ -267,11 +289,16 @@ class EnsembleBenchmark:
         combined_equity = initial_capital + total_pnl
 
         # Prepend initial value
+        if isinstance(combined_equity.index, pd.DatetimeIndex):
+            initial_index = combined_equity.index[0] - pd.Timedelta(days=1)
+        else:
+            initial_index = combined_equity.index[0] - 1
+            
         combined_equity = pd.concat(
             [
                 pd.Series(
                     [initial_capital],
-                    index=[combined_equity.index[0] - pd.Timedelta(days=1)],
+                    index=[initial_index],
                 ),
                 combined_equity,
             ]
@@ -316,7 +343,7 @@ def run_all_benchmarks(
 
     # Benchmark 3: Ensemble (sum of all P&L)
     print("Running Benchmark 3: Ensemble (Full Capital to All)...")
-    ensemble = EnsembleBenchmark()
+    ensemble = FullEnsembleBenchmark()
     benchmarks["Ensemble_Full_Capital"] = ensemble.backtest(
         specialist_returns, initial_capital
     )
