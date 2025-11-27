@@ -206,27 +206,7 @@ models/**/*.weights
 # ============================================================================
 # Reports and Visualizations
 # ============================================================================
-# Generated figures and plots
-reports/figures/**/*.png
-reports/figures/**/*.jpg
-reports/figures/**/*.jpeg
-reports/figures/**/*.pdf
-reports/figures/**/*.svg
 
-# Generated tables
-reports/tables/**/*.csv
-reports/tables/**/*.xlsx
-reports/tables/**/*.tex
-
-# Generated plots
-reports/plots/**/*.png
-reports/plots/**/*.jpg
-reports/plots/**/*.pdf
-
-# Keep directory structure
-!reports/figures/.gitkeep
-!reports/plots/.gitkeep
-!reports/tables/.gitkeep
 
 # ============================================================================
 # Logs and Temporary Files
