@@ -3,7 +3,7 @@
 Slide 1 - Title
 - Hierarchical DRL Multi-Strategy Fund
 - Adaptive capital allocation across 7 specialists + CIO allocator
-- Presenter: <Your Name> | Stony Brook Math & Data Science Conference | Feb 2026
+- Presenter: <Your Name> | Math & Data Science Conference | Feb 2026
 
 Slide 2 - Agenda
 - Why this project exists

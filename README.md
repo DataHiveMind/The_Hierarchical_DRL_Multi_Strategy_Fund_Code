@@ -202,7 +202,7 @@ Academic Research Project
 
 ## 👤 Author
 
-**Kenneth** - PhD Research in Hierarchical Deep Reinforcement Learning for Quantitative Finance
+**Kenneth LeGare** - B.S in Computer Science, Minor in Applied Mathematics with speciality in Finanical Mathematics
 
 📧 Contact: [GitHub](https://github.com/DataHiveMind)
 
