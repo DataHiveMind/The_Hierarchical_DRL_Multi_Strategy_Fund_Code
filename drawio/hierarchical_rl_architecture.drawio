@@ -1,0 +1,437 @@
+<mxfile host="app.diagrams.net" modified="2026-02-13T00:00:00.000Z" agent="GitHub Copilot" version="20.8.16">
+  <diagram id="hierarchical_rl" name="Hierarchical RL Architecture">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" math="1" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Title -->
+        <mxCell id="title" value="Hierarchical DRL Multi-Strategy Fund Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="600" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data Sources Layer -->
+        <mxCell id="data_layer_label" value="Data Sources" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="150" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="data_equities" value="Equities&#10;(Pairs Trading)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="data_fx" value="FX Markets&#10;(6 Pairs)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="data_futures" value="Futures&#10;(Commodities)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="data_options" value="Options&#10;(Greeks)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="data_market" value="Market Regime&#10;(VIX, Sentiment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Specialist Environments Layer -->
+        <mxCell id="specialist_layer_label" value="Specialist Trading Environments" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="80" width="300" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- Stat Arb Environment -->
+        <mxCell id="env_stat_arb" value="Statistical Arbitrage Env&#10;State: z-score, spread, cointegration&#10;Action: position ∈ [-1,1]&#10;Reward: PnL + mean-reversion bonus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="120" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Market Making Environment -->
+        <mxCell id="env_market_making" value="Market Making Env&#10;State: order book, inventory, fills&#10;Action: [bid_offset, ask_offset]&#10;Reward: spread - inventory penalty" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="210" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Factor Tracking Environment -->
+        <mxCell id="env_factor" value="Factor Tracking Env&#10;State: factor returns, correlations&#10;Action: discrete tilts (3³=27)&#10;Reward: return + diversification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="300" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Vol Trading Environment -->
+        <mxCell id="env_vol" value="Volatility Trading Env&#10;State: IV/RV, Greeks, term structure&#10;Action: vega position ∈ [-1,1]&#10;Reward: vol PnL - hedging costs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="390" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Delta Hedging Environment -->
+        <mxCell id="env_delta" value="Delta Hedging Env&#10;State: Greeks, moneyness, error&#10;Action: hedge ratio ∈ [-1.5,1.5]&#10;Reward: gamma profit - txn costs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="480" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Futures Spreads Environment -->
+        <mxCell id="env_futures" value="Futures Spreads Env&#10;State: spread z-score, carry, roll&#10;Action: spread position ∈ [-1,1]&#10;Reward: spread PnL + carry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="570" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- FX Arb Environment -->
+        <mxCell id="env_fx" value="FX Arbitrage Env&#10;State: rates, carry, triangle dev&#10;Action: [EUR, GBP, JPY] positions&#10;Reward: PnL + arb bonus - funding" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="250" y="660" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Specialist Agents Layer -->
+        <mxCell id="agent_layer_label" value="Specialist RL Agents" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="220" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- PPO Agent 1 -->
+        <mxCell id="agent_ppo_1" value="PPO Agent&#10;π(a|s) = N(μ_θ(s), σ_θ(s))&#10;Clip objective" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="570" y="130" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- DDPG Agent 1 -->
+        <mxCell id="agent_ddpg_1" value="DDPG Agent&#10;μ_θ(s) deterministic&#10;Critic Q(s,a)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="570" y="220" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- DQN Agent -->
+        <mxCell id="agent_dqn" value="DQN Agent&#10;Q(s,a) = V(s) + A(s,a)&#10;ε-greedy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="570" y="310" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- PPO Agent 2 -->
+        <mxCell id="agent_ppo_2" value="PPO Agent&#10;Continuous action&#10;On-policy updates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="570" y="400" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- DDPG Agent 2 -->
+        <mxCell id="agent_ddpg_2" value="DDPG Agent&#10;Replay buffer&#10;Target networks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="570" y="490" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- PPO Agent 3 -->
+        <mxCell id="agent_ppo_3" value="PPO Agent&#10;Continuous position&#10;Advantage estimation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="570" y="580" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- DDPG Agent 3 -->
+        <mxCell id="agent_ddpg_3" value="DDPG Agent&#10;Multi-dimensional&#10;Ornstein-Uhlenbeck" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="570" y="670" width="160" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Strategy Returns -->
+        <mxCell id="returns_layer_label" value="Strategy Returns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="180" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_1" value="r₁(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="140" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_2" value="r₂(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="230" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_3" value="r₃(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="320" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_4" value="r₄(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="410" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_5" value="r₅(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="500" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_6" value="r₆(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="590" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="returns_7" value="r₇(t)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="820" y="680" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- Master CIO Environment -->
+        <mxCell id="master_env_label" value="Master CIO Allocator Environment" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="950" y="80" width="350" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="master_env" value="CIO Allocator Environment&#10;&#10;State: specialist metrics (returns, vol, Sharpe, drawdown)&#10;       + market regime (VIX, trend, sentiment)&#10;       + portfolio (current weights, value, turnover)&#10;       + correlations (between strategies)&#10;&#10;Action: allocation weights w = [w₁, w₂, ..., w₇]&#10;        s.t. Σwᵢ = 1, wᵢ ∈ [0.05, 0.40]&#10;&#10;Reward: Sharpe ratio - λ₁·turnover + λ₂·diversification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="950" y="120" width="400" height="240" as="geometry"/>
+        </mxCell>
+        
+        <!-- Master Agent -->
+        <mxCell id="master_agent_label" value="Master CIO Agent" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1000" y="380" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="master_agent" value="PPO Master Agent&#10;&#10;Policy: π(w|s) = Softmax(μ_θ(s))&#10;&#10;PPO Objective:&#10;$L^{CLIP}(\theta) = \mathbb{E}[\min(r_t(\theta)\hat{A}_t,$&#10;$\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t)]$&#10;&#10;Value function: V_φ(s) estimates returns&#10;&#10;Advantage: $\hat{A}_t = \sum_{l=0}^{T-t} (\gamma\lambda)^l \delta_{t+l}$" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="950" y="420" width="400" height="200" as="geometry"/>
+        </mxCell>
+        
+        <!-- Portfolio Output -->
+        <mxCell id="portfolio_output" value="Portfolio Output&#10;&#10;Total Return: 1.75%&#10;Sharpe Ratio: 1.60&#10;Max Drawdown: -0.80%&#10;Annual Vol: 3.26%&#10;&#10;Dynamic Rebalancing&#10;Risk-Adjusted Allocation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#28a745;align=left;verticalAlign=top;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="950" y="650" width="400" height="150" as="geometry"/>
+        </mxCell>
+        
+        <!-- Edges from Data to Environments -->
+        <mxCell id="edge_data_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_equities" target="env_stat_arb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_equities" target="env_market_making">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_equities" target="env_factor">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_options" target="env_vol">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_options" target="env_delta">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_futures" target="env_futures">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_data_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="data_fx" target="env_fx">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Edges from Environments to Agents -->
+        <mxCell id="edge_env_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_stat_arb" target="agent_ppo_1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_market_making" target="agent_ddpg_1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_factor" target="agent_dqn">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_vol" target="agent_ppo_2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_delta" target="agent_ddpg_2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_futures" target="agent_ppo_3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_env_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="env_fx" target="agent_ddpg_3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Edges from Agents to Returns -->
+        <mxCell id="edge_agent_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ppo_1" target="returns_1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ddpg_1" target="returns_2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_dqn" target="returns_3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ppo_2" target="returns_4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ddpg_2" target="returns_5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ppo_3" target="returns_6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="edge_agent_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;" edge="1" parent="1" source="agent_ddpg_3" target="returns_7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Edges from Returns to Master Environment -->
+        <mxCell id="edge_returns_master" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_1" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="160"/>
+              <mxPoint x="920" y="200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_2" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="250"/>
+              <mxPoint x="920" y="210"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_3" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="340"/>
+              <mxPoint x="920" y="220"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_4" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="430"/>
+              <mxPoint x="920" y="230"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_5" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="520"/>
+              <mxPoint x="920" y="240"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_6" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="610"/>
+              <mxPoint x="920" y="250"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="edge_returns_master_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#FF6B6B;" edge="1" parent="1" source="returns_7" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="700"/>
+              <mxPoint x="920" y="260"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Edge from Master Env to Master Agent -->
+        <mxCell id="edge_master_to_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#4CAF50;" edge="1" parent="1" source="master_env" target="master_agent">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Edge from Master Agent to Portfolio -->
+        <mxCell id="edge_agent_to_portfolio" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#4CAF50;" edge="1" parent="1" source="master_agent" target="portfolio_output">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Market Regime to Master -->
+        <mxCell id="edge_market_master" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=block;endFill=1;dashed=1;strokeColor=#9C27B0;" edge="1" parent="1" source="data_market" target="master_env">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="800"/>
+              <mxPoint x="1150" y="800"/>
+              <mxPoint x="1150" y="280"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Legend -->
+        <mxCell id="legend_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="860" width="500" height="180" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="870" width="100" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_env" value="Trading Environments (Gymnasium)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="900" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_agent_ppo" value="PPO Agents (On-policy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="940" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_agent_ddpg" value="DDPG Agents (Off-policy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="50" y="980" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_agent_dqn" value="DQN Agents (Discrete)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1020" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_returns" value="Strategy Returns → Master" style="text;html=1;strokeColor=#FF6B6B;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="900" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_allocation" value="Allocation Decisions" style="text;html=1;strokeColor=#4CAF50;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="940" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="legend_market" value="Market Regime Signals" style="text;html=1;strokeColor=#9C27B0;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;dashed=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="980" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- Training Process Box -->
+        <mxCell id="training_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#ff9800;" vertex="1" parent="1">
+          <mxGeometry x="580" y="860" width="470" height="180" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="training_title" value="Hierarchical Training Process" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="590" y="870" width="250" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="training_phase1" value="Phase 1: Train 7 Specialists Independently&#10;500K-1M steps each on their markets" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="900" width="440" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="training_phase2" value="Phase 2: Freeze Specialists, Train Master CIO&#10;200K steps learning allocation weights" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="945" width="440" height="35" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="training_phase3" value="Phase 3: Optional Joint Fine-tuning&#10;End-to-end with reduced specialist LR" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="990" width="440" height="35" as="geometry"/>
+        </mxCell>
+        
+        <!-- Key Formulas -->
+        <mxCell id="formulas_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1976d2;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="860" width="470" height="180" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="formulas_title" value="Key Mathematical Formulations" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1090" y="870" width="300" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="formula_specialist" value="Specialist MDP: $\max_{\pi_i} \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t^i | s_t, a_t \sim \pi_i(s_t)]$" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="905" width="450" height="25" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="formula_portfolio" value="Portfolio Return: $r_p(t) = \sum_{i=1}^{7} w_i(t) \cdot r_i(t)$" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="935" width="450" height="25" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="formula_sharpe" value="Sharpe Objective: $\text{Sharpe} = \frac{\mathbb{E}[r_p - r_f]}{\sigma_p}$" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="965" width="450" height="25" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="formula_master" value="Master Reward: $R_t = \text{Sharpe}_t - \lambda_1 \cdot \text{Turnover}_t + \lambda_2 \cdot \text{Diversification}_t$" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="995" width="450" height="25" as="geometry"/>
+        </mxCell>
+        
+        <!-- Bottom Note -->
+        <mxCell id="bottom_note" value="Note: This hierarchical architecture enables modular strategy development, independent specialist expertise,&#10;and adaptive capital allocation based on market regimes and strategy correlations." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="400" y="1060" width="800" height="40" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
