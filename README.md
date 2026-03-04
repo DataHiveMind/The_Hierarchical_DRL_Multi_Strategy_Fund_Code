@@ -93,11 +93,11 @@ This project implements a hierarchical deep reinforcement learning framework whe
 
 | Strategy | Algorithm | Total Return | Sharpe Ratio | Max Drawdown | Win Rate | Description |
 |----------|-----------|--------------|--------------|--------------|----------|-------------|
-| **Statistical Arbitrage** | DDPG | **25.22%** | **0.58** | -8.24% | 50.95% | Pairs trading on mean-reverting spreads |
-| **Market Making** | DQN | **17.66%** | **0.85** | -4.52% | 51.19% | Bid-ask spread capture with inventory management |
-| Factor Tracking | PPO | -0.84% | -0.11 | -7.38% | 48.81% | Momentum and value factor exposure |
-| Volatility Trading | DDPG | -0.01% | -191.70 | -0.18% | 51.43% | Straddle/strangle-like volatility strategies |
-| Delta Hedging | DQN | -0.01% | -203.75 | -0.17% | 50.48% | Options delta-neutral hedging simulation |
+| **Statistical Arbitrage** | PPO | **25.22%** | **0.58** | -8.24% | 50.95% | Pairs trading on mean-reverting spreads |
+| **Market Making** | DDPG | **17.66%** | **0.85** | -4.52% | 51.19% | Bid-ask spread capture with inventory management |
+| Factor Tracking | DQN | -0.84% | -0.11 | -7.38% | 48.81% | Momentum and value factor exposure |
+| Volatility Trading | PPO | -0.01% | -191.70 | -0.18% | 51.43% | Straddle/strangle-like volatility strategies |
+| Delta Hedging | DDPG | -0.01% | -203.75 | -0.17% | 50.48% | Options delta-neutral hedging simulation |
 | Futures Spreads | PPO | 0.71% | -3.01 | -2.14% | 49.05% | Calendar and inter-commodity spread trading |
 | FX Arbitrage | DDPG | -0.10% | -27.85 | -0.67% | 48.81% | Triangular arbitrage across currency pairs |
 
@@ -119,9 +119,9 @@ This project implements a hierarchical deep reinforcement learning framework whe
 
 - **Source**: Real market data via ArcticDB
 - **Asset Classes**: Equities (25 stocks), FX (10 pairs), Futures (10 contracts)
-- **Training Period**: 2010-2018 (9 years)
-- **Validation Period**: 2019 (1 year)
-- **Test Period**: 2020-2024 (4.9 years)
+- **Training Period**: 2020-01-01 to 2021-12-31 (2 years)
+- **Validation Period**: 2022-01-01 to 2022-12-31 (1 year)
+- **Test Period**: 2023-01-01 to 2024-12-31 (2 years)
 - **Total Features**: Technical indicators, microstructure, regime detection
 
 ## 🛠️ Tech Stack

@@ -1,0 +1,50 @@
+project:
+  name: hierarchical_drl_multi_strategy_fund
+  version: 1
+  owner: DataHiveMind
+
+data:
+  source_of_truth: ArcticDB
+  db_urls:
+    equities: lmdb://equities_data
+    fx: lmdb://fx_data
+    futures: lmdb://futures_data
+  timezone: UTC
+  trading_calendar: XNYS
+
+splits:
+  train_start: "2020-01-01"
+  train_end: "2021-12-31"
+  validation_start: "2022-01-01"
+  validation_end: "2022-12-31"
+  test_start: "2023-01-01"
+  test_end: "2024-12-31"
+
+market_frictions:
+  transaction_cost_bps: 10
+  slippage_bps: 5
+  borrow_cost_bps_annual: 0
+  latency_steps: 0
+
+risk:
+  risk_free_rate_annual: 0.02
+  max_single_allocation: 0.40
+  min_single_allocation: 0.05
+  max_turnover_per_rebalance: 0.50
+  target_volatility_annual: 0.12
+
+evaluation:
+  periods_per_year: 252
+  confidence_intervals:
+    enabled: true
+    bootstrap_samples: 2000
+    alpha: 0.05
+  leakage_controls:
+    purged_walk_forward: true
+    purge_steps: 5
+    embargo_steps: 5
+
+reporting:
+  canonical_results_file: reports/tables/performance_comparison.csv
+  generated_report_file: reports/FINAL_RESULTS_REPORT.md
+  generated_readme_metrics: README.md

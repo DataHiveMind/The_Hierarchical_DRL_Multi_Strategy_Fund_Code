@@ -9,9 +9,9 @@ This notebook (`03_results_and_visualization.ipynb`) is the comprehensive finale
 ### 1. **Data Loading** (Section 1-2)
 - Loads real market data from ArcticDB databases (Equities, FX, Futures)
 - Splits data into:
-  - **Training**: 2010-2018 (9 years)
-  - **Validation**: 2019 (1 year)  
-  - **Test**: 2020-2024 (4.9 years)
+   - **Training**: 2020-01-01 to 2021-12-31 (2 years)
+   - **Validation**: 2022-01-01 to 2022-12-31 (1 year)  
+   - **Test**: 2023-01-01 to 2024-12-31 (2 years)
 
 ### 2. **Data Preparation** (Section 3)
 - Prepares specific datasets for each of the 7 specialist strategies:
@@ -24,14 +24,14 @@ This notebook (`03_results_and_visualization.ipynb`) is the comprehensive finale
   - FX Arbitrage (currency pairs)
 
 ### 3. **Specialist Training** (Section 4)
-- Trains all 7 specialist agents on 2010-2018 data
+- Trains all 7 specialist agents on 2020-2021 data
 - Uses appropriate algorithms:
   - **DDPG** for continuous actions (6 specialists)
   - **DQN** for discrete actions (1 specialist - Factor Tracking)
 - Saves trained models to `models/specialists/[strategy_name]/`
 
 ### 4. **Specialist Backtesting** (Section 5)
-- Tests all trained specialists on out-of-sample data (2020-2024)
+- Tests all trained specialists on out-of-sample data (2023-2024)
 - Computes comprehensive performance metrics
 - Records equity curves, positions, and actions
 
@@ -202,7 +202,7 @@ TEST_END = '2024-11-30'
 - This notebook is **fully automated** - no manual intervention needed
 - All randomness is seeded for reproducibility
 - Transaction costs (0.1%) and slippage (0.05%) are modeled
-- Results are based on real historical data (2020-2024 is truly out-of-sample)
+- Results are based on real historical data (2023-2024 is truly out-of-sample)
 
 ## Support
 
